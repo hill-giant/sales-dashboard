@@ -7,8 +7,8 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
-    image: digitalocean.com/php
+      dockerfile: Dockerfile-app
+    image: laravel
     container_name: app
     restart: unless-stopped
     tty: true
@@ -45,7 +45,9 @@ services:
     tty: true
     environment:
       MYSQL_ROOT_PASSWORD: what_a_password_it_is_123
-      MYSQL_DATABASE: laravel
+      MYSQL_DATABASE: business
+      MYSQL_USER: cooluser
+      MYSQL_PASSWORD: making_up_a_password
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     ports:
