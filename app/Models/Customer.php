@@ -19,4 +19,9 @@ class Customer extends Model
     {
         return $this->hasMany('App\Models\Order');
     }
+
+    public function orderItems()
+    {
+        return $this->hasManyThrough('App\Models\OrderItem','App\Models\Order');
+    }
 }
