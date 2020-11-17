@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Order;
+use App\Models\OrderItem;
 
 class OrderSeeder extends Seeder
 {
@@ -16,7 +17,7 @@ class OrderSeeder extends Seeder
     {
         Order::factory()
                 ->times(100)
-                ->hasOrderItems(rand(1,10))
+                ->has(OrderItem::factory()->count(rand(1,20)))
                 ->create();
     }
 }
