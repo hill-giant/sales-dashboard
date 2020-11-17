@@ -1,68 +1,61 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-  <div class="row">
-    <div class="col-md-10 offset-md-1">
-      <div class="panel panel-default">
-        <div class="panel-heading">Dashboard</div>
-        <div class="panel-body">
-          <canvas id="canvas" height="280" width="600"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
 <script>
-  var customer = <?php echo $customer; ?>;
-  var order = <?php echo $order; ?>;
-  var lineChartData = {
-    labels: customer.label,
-    datasets: [{
-      label: 'Customer',
-      backgroundColor: "pink",
-      data: customer.data,
-      fill: false
-    },
-    {
-      label: 'Orders',
-      backgroundColor: "blue",
-      data: order.data,
-      fill: false
-    }
-    ]
-  };
-  window.onload = function() {
-    var ctx = document.getElementById("canvas").getContext("2d");
-    window.myBar = new Chart(ctx, {
-      type: 'line',
-      data: lineChartData,
-      options: {
-        scales: {
-          x: {
-            type: 'time',
-            time: {
-              unit: 'day',
-              displayFormats: {
-                'day': 'MM DD'
-              }
-            }
+  var customer = <?php echo json_encode($customer); ?>;
+  var order = <?php echo json_encode($order); ?>;
+  var revenue = <?php echo json_encode($revenue); ?>;
+  var myDateFormat = '%Y %m %d';
+  $(function() {
+    $('#container').highcharts({
+      title: {
+        text: 'Sales Dashboard'
+      },
+      xAxis: {
+          type: 'datetime',
+          dateTimeLabelFormats: {
+              millisecond: myDateFormat,
+              second: myDateFormat,
+              minute: myDateFormat,
+              hour: myDateFormat,
+              day: myDateFormat,
+              week: myDateFormat,
+              month: myDateFormat,
+              year: myDateFormat
           }
-        },
-        elements: {
-          rectangle: {
-            borderWidth: 2,
-            borderColor: '#c1c1c1',
-            borderSkipped: 'bottom'
-          }
-        },
-        responsive: true,
+      },
+      yAxis: {
         title: {
-          display: true,
-          text: 'Dashboard'
-        }
-      }
+          text: 'Total'
+        },
+        plotLines: [{
+                  value: 0,
+                  width: 1,
+                  color: '#808080'
+              }]
+      },
+      legend: {
+              layout: 'vertical',
+              align: 'right',
+              verticalAlign: 'middle',
+              borderWidth: 0
+      },
+      series: [{
+        name: 'Customer',
+        data: customer
+      },
+      {
+        name:'Orders',
+        data: order
+      },
+      {
+        name: 'Revenue',
+        data: revenue
+      }]
     });
-  };
+  });
 </script>
 @endsection

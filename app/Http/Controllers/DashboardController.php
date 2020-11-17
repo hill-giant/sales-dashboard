@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\OrderItem;
 use DB;
 use Carbon\Carbon;
 
@@ -12,39 +13,51 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $customer = [];
+        $customer = array();
         $order = [];
         $revenue = [];
+        $fromDate = Carbon::createFromFormat('Y-m-d','2019-16-11');
+        $toDate = Carbon::createFromFormat('Y-m-d','2020-16-11');
+        $customersQuery = Customer::selectRaw("DATE_FORMAT(created_at, '%Y %m %d') date, COUNT(*) count")
+                            ->whereDate('created_at', '>', $fromDate->toDateString())
+                            ->whereDate('created_at', '<', $toDate->toDateString())
+                            ->groupBy('date')
+                            ->orderByRaw("STR_TO_DATE(date, '%Y %m %d')")
+                            ->pluck('count','date');
 
-        $customers = Customer::select(
-            \DB::raw("COUNT(*) as count"),
-            \DB::raw("DATE(created_at) as date")
-        )->groupBy('date')
-         ->orderBy('date')
-         ->get();
-        
-        $orders = Order::select(
-            \DB::raw("COUNT(*) as count"),
-            \DB::raw("DATE(purchase_date) as date")
-        )->groupBy('date')
-         ->orderBy('date')
-         ->get();
-
-        foreach($customers as $row)
-        {
-            $customer['label'][] = Carbon::parse($row->date)->format('F d');
-            $customer['data'][] = (int) $row->count;
+        foreach ($customersQuery as $key => $value) {
+            $row = array($key, $value);
+            $customer[] = $row;
         }
 
-        foreach($orders as $row)
-        {
-            $order['label'][] = Carbon::parse($row->date)->format('F d');
-            $order['data'][] = (int) $row->count;
+        $ordersQuery = Order::selectRaw("DATE_FORMAT(purchase_date, '%Y %m %d') date, COUNT(*) count")
+                            ->whereDate('purchase_date', '>', $fromDate->toDateString())
+                            ->whereDate('purchase_date', '<', $toDate->toDateString())
+                            ->groupBy('date')
+                            ->orderByRaw("STR_TO_DATE(date, '%Y %m %d')")
+                            ->pluck('count','date');
+
+        foreach ($ordersQuery as $key => $value) {
+            $row = array($key, $value);
+            $order[] = $row;
+        }
+
+        $revenueQuery = OrderItem::SelectRaw("DATE_FORMAT(created_at, '%Y %m %d') date")
+                                    ->whereDate('created_at', '>', $fromDate->toDateString())
+                                    ->whereDate('created_at', '<', $toDate->toDateString())
+                                    ->groupBy('date')
+                                    ->orderByRaw("STR_TO_DATE(date, '%Y %m %d')")
+                                    ->selectRaw("SUM(price) as revenue")
+                                    ->pluck('revenue','date');
+
+        foreach ($revenueQuery as $key => $value) {
+            $row = array($key, $value);
+            $revenue[] = $row;
         }
 
         return view('sales.dashboard')
-                ->with('customer',json_encode($customer,JSON_NUMERIC_CHECK))
-                ->with('order',json_encode($order,JSON_NUMERIC_CHECK));
-                //->with('revenue',json_encode($order,JSON_NUMERIC_CHECK));
+                ->with(compact('customer'))
+                ->with(compact('order'))
+                ->with(compact('revenue'));
     }
 }
