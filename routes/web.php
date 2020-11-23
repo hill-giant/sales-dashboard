@@ -13,4 +13,5 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::get('/',[DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::post('/', [DashboardController::class, 'dateRangeRequest'])->name('dashboard.date.range.request');
