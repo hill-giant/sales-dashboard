@@ -17,8 +17,13 @@ class CustomerSeeder extends Seeder
     public function run()
     {
         Customer::factory()
-                    ->times(1000)
-                    ->has(Order::factory()->count(rand(1,2)))
-                    ->create();
+            ->count(800)
+            ->create()
+            ->each(function($customer) {
+                $customer->orders()->saveMany(Order::factory()->count(rand(1,3))->make())
+                ->each(function($order) {
+                    $order->orderItems()->saveMany(OrderItem::factory()->count(1,10)->make());
+                });
+            });
     }
 }
