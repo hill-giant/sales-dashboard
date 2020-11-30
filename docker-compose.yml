@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile-app
     image: laravel
     container_name: app
-    restart: unless-stopped
+    restart: always
     tty: true
     environment:
       SERVICE_NAME: app
@@ -26,7 +26,7 @@ services:
   webserver:
     image: nginx:alpine
     container_name: webserver
-    restart: unless-stopped
+    restart: always
     ports:
     - "80:80"
     - "443:443"
@@ -39,11 +39,9 @@ services:
 
   #MySQL Service
   db:
-    build:
-      context: .
-      dockerfile: Dockerfile-db
+    image: mysql:8.0.22
     container_name: db
-    restart: unless-stopped
+    restart: always
     tty: true
     environment:
       MYSQL_ROOT_PASSWORD: what_a_password_it_is_123
@@ -69,4 +67,3 @@ networks:
 volumes:
   dbdata:
     driver: local
-  

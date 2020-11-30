@@ -39,7 +39,7 @@ spec:
           value: mysql
         - name: SERVICE_TAGS
           value: dev
-        image: db
+        image: mysql:8.0.22
         imagePullPolicy: ""
         name: db
         ports:
