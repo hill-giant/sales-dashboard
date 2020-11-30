@@ -1,8 +1,7 @@
 function renderChart(customers, orders, revenue) {
     'use strict';
-    var ctx = $('#myChart');
-
-    var myChart = new Chart(ctx, {
+    var ctx = $('#salesChart');
+    var salesChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: customers.label,
@@ -11,7 +10,7 @@ function renderChart(customers, orders, revenue) {
                 lineTension: 0,
                 backgroundColor: 'transparent',
                 borderColor: '#007bff',
-                borderWidth: 4,
+                borderWidth: 1,
                 pointBackgroundColor: '#007bff'
             },
             {
@@ -19,20 +18,26 @@ function renderChart(customers, orders, revenue) {
                 lineTension: 0,
                 backgroundColor: 'transparent',
                 borderColor: '#000000',
-                borderWidth: 4,
+                borderWidth: 1,
                 pointBackgroundColor: '#000000'
             },
             {
                 data: revenue.data,
                 lineTension: 0,
                 backgroundColor: 'transparent',
-                borderColor: '#111111',
-                borderWidth: 4,
-                pointBackgroundColor: '#111111'
+                borderColor: '#228B22',
+                borderWidth: 1,
+                pointBackgroundColor: '#228B22'
             }]
         },
         options: {
             scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    }
+                }],
                 yAxes: [{
                     ticks: {
                         beginAtZero: false
@@ -45,7 +50,7 @@ function renderChart(customers, orders, revenue) {
         }
     });
 
-    return myChart;
+    return salesChart;
 }
 
 $(function () {
@@ -65,7 +70,7 @@ $(function () {
                 success: function (data) {
                     if ($.isEmptyObject(data.error)) {
                         console.log(data.success);
-                        myChart.destroy();
+                        salesChart.destroy();
                         renderChart(data[0].customers, data[1].orders, data[2].revenue)
                     } else {
                         $.each(data.error, function (key, value) {
@@ -78,4 +83,4 @@ $(function () {
 });
 
 // TODO(nclowes): Look into alternatives to a global var.
-var myChart = renderChart(customers, orders, revenue);
+var salesChart = renderChart(customers, orders, revenue);

@@ -13,7 +13,6 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/dashboard.js', 'public/js')
-    .js('resources/js/daterange.js', 'public/js')
     .styles(['node_modules/daterangepicker/daterangepicker.css'], 'public/css/app.css')
     .sass('resources/sass/app-sass.scss', 'public/css')
     .combine(['public/css/app-sass.css','public/css/app.css'], 'public/css/app.css')
