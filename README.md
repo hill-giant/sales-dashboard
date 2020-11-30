@@ -1,5 +1,5 @@
 # sales-dashboard
-A simple sales dashboard created Laravel. Includes resources for deployment in Docker and Kubernetes.
+A simple sales dashboard app written as an experiment with web development tools. This project uses Bootstrap, Chart.js, and Laravel. Includes resources for deployment in Docker and Kubernetes.
 
 ## Setup
 Spin up the containers.
@@ -15,3 +15,4 @@ Seed the database.
 * Handle secrets in docker-compose.yml.
 * Kubernetes testing.
 * Script setup for development.
+* Add more TODOs.
