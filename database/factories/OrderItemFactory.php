@@ -22,13 +22,12 @@ class OrderItemFactory extends Factory
      */
     public function definition()
     {
-        $orders = Order::all();
-        $order = $this->faker->randomElement($orders->ToArray());
+        $order = $this->faker->randomElement(Order::select('id','purchase_date')->get()->toArray());
         return [
             'order_id' => $order["id"],
             'EAN' => $this->faker->ean13,
-            'quantity' => $this->faker->numberBetween(1,10),
-            'price' => $this->faker->numberBetween(1,20),
+            'quantity' => $this->faker->numberBetween(1,5),
+            'price' => $this->faker->numberBetween(1,5),
             'created_at' => $order["purchase_date"],
         ];
     }
